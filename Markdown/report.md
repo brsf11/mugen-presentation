@@ -1,10 +1,14 @@
 # mugen工具的使用和开发  
 ## mugen简介  
 - mugen是什么（图说明mugen、测试套、测试例的关系），有什么用  
+    - mugen是openEuler社区开放的测试框架，提供公共配置和方法以便社区开发者进行测试代码的编写和执行  
+    - mugen结构  
+        <img src="../Pic/mugen_testsuite_testcases.png">  
 - mugen项目的文件结构（图）及各目录作用  
     - doc 测试用例规范  
     - libs/locallibs  
         - mugen本体使用的库  
+            - 
         - 测试代码用库  
         - 共用库  
     - License  
@@ -39,9 +43,28 @@
     bash mugen.sh -c --ip 127.0.0.1 --password openEuler12#$ --user root --port 22
     ```
 - 运行测试  
-    - 成功一例  
-    - 失败一例  
-    - 失败一例附原因解析  
+    - 成功一例 clang  
+    ```shell  
+    [root@openEuler-riscv64 mugen]# bash mugen.sh -f clang
+    Mon Jul 11 13:37:31 2022 - INFO  - start to run testcase:oe_test_clang_03.
+    Mon Jul 11 13:38:18 2022 - INFO  - The case exit by code 0.
+    Mon Jul 11 13:38:19 2022 - INFO  - End to run testcase:oe_test_clang_03.
+    Mon Jul 11 13:38:20 2022 - INFO  - start to run testcase:oe_test_clang_01.
+    Mon Jul 11 13:38:46 2022 - INFO  - The case exit by code 0.
+    Mon Jul 11 13:38:47 2022 - INFO  - End to run testcase:oe_test_clang_01.
+    Mon Jul 11 13:38:49 2022 - INFO  - start to run testcase:oe_test_clang_02.
+    Mon Jul 11 13:39:13 2022 - INFO  - The case exit by code 0.
+    Mon Jul 11 13:39:14 2022 - INFO  - End to run testcase:oe_test_clang_02.
+    Mon Jul 11 13:39:15 2022 - INFO  - A total of 3 use cases were executed, with 3 successes and 0 failures.
+    ```
+    - 失败一例 dnf  
+    ```shell  
+
+    ```
+    - 失败一例 osc  
+    ```shell  
+
+    ```
 - 辅助测试脚本  
     - 功能  
     - 使用  
@@ -52,6 +75,9 @@
     - mugen.sh函数调用过程（图）  
     - testcase函数调用过程例1（图）  
     - testcase函数调用过程例2（图）  
+- 测试失败分析  
+    - 失败一例附原因解析 dnf  
+    - 失败一例附原因解析 osc    
 ## mugen测试的开发  
 - 开发测试需要编写的文件  
     - testcase文件  
