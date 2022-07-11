@@ -219,48 +219,48 @@
 ## mugen基本测试原理  
 - 测试运行流程   
     - mugen.sh函数调用过程  
-    <img src="../Pic/mugen_procedure.png">  
+        <img src="../Pic/mugen_procedure.png">  
     - testcase函数调用过程例1（图）  
         - testcase代码结构  
-        ```shell  
-        source ${OET_PATH}/libs/locallibs/common_lib.sh #包含函数库
-        function config_params() {}                     #需要预加载的数据、参数配置
-        function pre_test() {}                          #测试对象、测试需要的工具等安装准备
-        function run_test() {}                          #测试点的执行
-        function post_test() {}                         #后置处理，恢复测试环境
-        main "$@"                                       #运行测试
-        ```  
+            ```shell  
+            source ${OET_PATH}/libs/locallibs/common_lib.sh #包含函数库
+            function config_params() {}                     #需要预加载的数据、参数配置
+            function pre_test() {}                          #测试对象、测试需要的工具等安装准备
+            function run_test() {}                          #测试点的执行
+            function post_test() {}                         #后置处理，恢复测试环境
+            main "$@"                                       #运行测试
+            ```  
         - 例如  
-        ```shell  
-        source "../common/common_lib.sh"
+            ```shell  
+            source "../common/common_lib.sh"
 
-        function pre_test() {
-            LOG_INFO "Start environmental preparation."
-            DNF_INSTALL git-daemon
-            LOG_INFO "End of environmental preparation!"
-        }
+            function pre_test() {
+                LOG_INFO "Start environmental preparation."
+                DNF_INSTALL git-daemon
+                LOG_INFO "End of environmental preparation!"
+            }
 
-        function run_test() {
-            LOG_INFO "Start to run test."
-            test_execution git.socket
-            systemctl start git.socket
-            systemctl reload git.socket 2>&1 | grep "Job type reload is not applicable for unit git.socket"
-            CHECK_RESULT $?
-            systemctl status git.socket | grep "Active: active"
-            CHECK_RESULT $?
-            LOG_INFO "End of the test."
-        }
+            function run_test() {
+                LOG_INFO "Start to run test."
+                test_execution git.socket
+                systemctl start git.socket
+                systemctl reload git.socket 2>&1 | grep "Job type reload is not applicable for unit git.socket"
+                CHECK_RESULT $?
+                systemctl status git.socket | grep "Active: active"
+                CHECK_RESULT $?
+                LOG_INFO "End of the test."
+            }
 
-        function post_test() {
-            LOG_INFO "start environment cleanup."
-            DNF_REMOVE
-            LOG_INFO "Finish environment cleanup!"
-        }
+            function post_test() {
+                LOG_INFO "start environment cleanup."
+                DNF_REMOVE
+                LOG_INFO "Finish environment cleanup!"
+            }
 
-        main "$@"
-        ```
+            main "$@"
+            ```
     - testcase执行函数调用过程  
-    <img src="../Pic/testcase_procedure.png">
+        <img src="../Pic/testcase_procedure.png">
 ## mugen测试的开发  
 - 开发测试需要编写的文件  
     - testcase文件  
