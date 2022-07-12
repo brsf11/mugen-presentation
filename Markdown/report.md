@@ -1,20 +1,18 @@
 # mugen工具的使用和开发  
 ## mugen简介  
-- mugen是什么（图说明mugen、测试套、测试例的关系）
+- mugen是什么
     - mugen是openEuler社区开放的测试框架，提供公共配置和方法以便社区开发者进行测试代码的编写和执行  
     - mugen提供了  
-        - 丰富的openEuler测试代码（用于openEuler x86/AArch64 的测试）  
+        - 丰富的openEuler测试代码（用于openEuler x86/AArch64 系统和软件功能的测试）  
         - 一套编写测试代码的规范（详见第四部分mugen测试开发）  
-        - 用于编写测试的函数库（详见mugen项目的文件结构和第四部分mugen测试开发）  
+        - 辅助编写测试的函数库（详见mugen项目的文件结构和第四部分mugen测试开发）  
         - 一个能简化测试执行过程的执行程序（mugen.sh）  
     - mugen结构  
         <img src="../Pic/mugen_testsuite_testcases.png">  
-- mugen项目的文件结构（图）及各目录作用 
+- mugen项目的文件结构及各目录作用 
     - 根目录下脚本  
         - dep_install.sh 用于依赖安装
-        - mugen.sh mugen执行脚本  
-        - qemu_ctl.sh qemu虚拟机配置脚本，暂未使用  
-        - runoet.sh 疑似弃用的执行脚本，功能为mugen.sh的子集  
+        - mugen.sh mugen执行脚本   
     - suite2cases 测试套文件，一般和一个服务或软件对应，指定测试用例列表、文件路径和其他信息  
         - 例如clang.json  
             ```json  
@@ -53,12 +51,13 @@
     - doc 测试用例规范，定义了编写测试的要求  
     - License  
 ## mugen的安装、配置和运行  
-- 依赖安装  
+- 安装  
     ```shell
+    git clone https://gitee.com/openeuler/mugen.git
+    cd mugen
     sudo bash dep_install.sh
     ```  
-    - python模块下载过慢可以换国内源
-    - 本例中使用https://pypi.tuna.tsinghua.edu.cn/simple/  
+    或者https://github.com/brsf11/mugen-riscv.git  
 - 配置  
     - mugen的节点
         - mugen有远程执行测试的功能，每一台机器（虚拟机或物理机），配置为一个节点  
@@ -68,7 +67,7 @@
         bash mugen.sh -c --ip 127.0.0.1 --password openEuler12#$ --user root --port 22
         ```  
 - 运行测试  
-    - 成功一例 clang  
+    - clang  
         ```shell  
         [root@openEuler-riscv64 mugen]# bash mugen.sh -f clang
         Mon Jul 11 13:37:31 2022 - INFO  - start to run testcase:oe_test_clang_03.
@@ -82,7 +81,7 @@
         Mon Jul 11 13:39:14 2022 - INFO  - End to run testcase:oe_test_clang_02.
         Mon Jul 11 13:39:15 2022 - INFO  - A total of 3 use cases were executed, with 3 successes and 0 failures.
         ```
-    - 失败一例 dnf  
+    - dnf  
         ```shell  
         [root@openEuler-riscv64 mugen]# bash mugen.sh -f dnf
         ...
@@ -126,37 +125,9 @@
         enabled=1
         gpgcheck=0
         ```  
-    - 失败一例 osc  
-        ```shell  
-        [root@openEuler-riscv64 mugen]# bash mugen.sh -f osc
-        Mon Jul 11 14:32:52 2022 - INFO  - start to run testcase:oe_test_osc_03.
-        Mon Jul 11 14:33:16 2022 - ERROR - The case exit by code 1.
-        Mon Jul 11 14:33:17 2022 - INFO  - End to run testcase:oe_test_osc_03.
-        Mon Jul 11 14:33:19 2022 - INFO  - start to run testcase:oe_test_osc_05.
-        Mon Jul 11 14:33:43 2022 - ERROR - The case exit by code 1.
-        Mon Jul 11 14:33:44 2022 - INFO  - End to run testcase:oe_test_osc_05.
-        Mon Jul 11 14:33:46 2022 - INFO  - start to run testcase:oe_test_osc_01.
-        Mon Jul 11 14:34:13 2022 - ERROR - The case exit by code 7.
-        Mon Jul 11 14:34:14 2022 - INFO  - End to run testcase:oe_test_osc_01.
-        Mon Jul 11 14:34:15 2022 - INFO  - start to run testcase:oe_test_osc_02.
-        Mon Jul 11 14:34:40 2022 - ERROR - The case exit by code 1.
-        Mon Jul 11 14:34:40 2022 - INFO  - End to run testcase:oe_test_osc_02.
-        Mon Jul 11 14:34:42 2022 - INFO  - start to run testcase:oe_test_osc_06.
-        Mon Jul 11 14:35:07 2022 - ERROR - The case exit by code 1.
-        Mon Jul 11 14:35:07 2022 - INFO  - End to run testcase:oe_test_osc_06.
-        Mon Jul 11 14:35:09 2022 - INFO  - start to run testcase:oe_test_osc_07.
-        Mon Jul 11 14:35:33 2022 - ERROR - The case exit by code 1.
-        Mon Jul 11 14:35:34 2022 - INFO  - End to run testcase:oe_test_osc_07.
-        Mon Jul 11 14:35:36 2022 - INFO  - start to run testcase:oe_test_osc_build.
-        Mon Jul 11 14:36:01 2022 - ERROR - The case exit by code 1.
-        Mon Jul 11 14:36:02 2022 - INFO  - End to run testcase:oe_test_osc_build.
-        Mon Jul 11 14:36:04 2022 - INFO  - start to run testcase:oe_test_osc_04.
-        Mon Jul 11 14:36:28 2022 - ERROR - The case exit by code 1.
-        Mon Jul 11 14:36:29 2022 - INFO  - End to run testcase:oe_test_osc_04.
-        Mon Jul 11 14:36:29 2022 - INFO  - A total of 8 use cases were executed, with 0 successes and 8 failures.
-        ```
 - 辅助测试脚本  
-    - 功能  
+    - mugen中一个测试套对应一个软件或服务，为了更方便地执行测试，可以再抽象一层  
+    - 辅助测试脚本匹配测试列表和mugen中的测试套，并反馈缺失的测试和执行可用测试  
     - 使用  
         - 一例完整展示 list_test  
             - list_test  
@@ -220,7 +191,7 @@
 - 测试运行流程   
     - mugen.sh函数调用过程  
         <img src="../Pic/mugen_procedure.png">  
-    - testcase函数调用过程例1（图）  
+    - testcase函数调用过程  
         - testcase代码结构  
             ```shell  
             source ${OET_PATH}/libs/locallibs/common_lib.sh #包含函数库
@@ -277,10 +248,70 @@
             - SLEEP_WAIT() 等待命令执行时长，超时判错  
         - cli-test中的systemd单元（详见 testcases/cli-test/common/common_lib.sh）   
 - 测试代码开发例（GCC） 
+    - testcase主体  
+        ```shell  
+        function pre_test() {
+            LOG_INFO "Start to prepare the test environment."
+            DNF_INSTALL gcc
+            cp -r ../common ./tmp
+            cd ./tmp
+            LOG_INFO "End to prepare the test environment."
+        }
+        function run_test() {
+            LOG_INFO "Start to run test."
+            gcc test.c -o test
+            CHECK_RESULT $?
+            ./test | grep "Hello world!" > /dev/null
+            CHECK_RESULT $?
+            objdump -D ./test | grep "<main>" > /dev/null
+            CHECK_RESULT $?
+            LOG_INFO "End to run test."
+        }
+        function post_test() {
+            LOG_INFO "Start to restore the test environment."
+            rm -rf ./tmp
+            DNF_REMOVE
+            LOG_INFO "End to restore the test environment."
+        }
+        ```
+    - common/test.c
+        ```c
+        #include<stdio.h>
+
+        int main()
+        {
+            printf("Hello world!\n");
+            return 0;
+        }
+        ```  
+    - testsuite  
+        ```json
+        {
+            "path": "$OET_PATH/testcases/cli-test/gcc",
+            "cases": [
+                {
+                    "name": "oe_test_gcc"
+                }
+            ]
+        }
+        ```
+    - 测试运行结果  
+        ```shell  
+       [root@openEuler-riscv64 mugen]# bash mugen.sh -f gcc
+        Tue Jul 12 11:52:46 2022 - INFO  - start to run testcase:oe_test_gcc.
+        Tue Jul 12 11:53:03 2022 - INFO  - The case exit by code 0.
+        Tue Jul 12 11:53:04 2022 - INFO  - End to run testcase:oe_test_gcc.
+        Tue Jul 12 11:53:04 2022 - INFO  - A total of 1 use cases were executed, with 1 successes and 0 failures. 
+        ```
 ## 待完成的工作  
 - 开发mugen测试代码  
-    - 从mugen自带的测试代码中选出可用于openEuler RISC-V测试的  
-    - 找到并编写mugen自带测试代码中缺少的测试  
+    - mugen自带的测试代码中可以直接实用的  
+    - 需要改写的
+    - 缺失，需要编写的  
     - 最终形成一个测试列表  
+- 对于每一个测试对象  
+    - 首先定义需要测试的功能点  
+    - 之后编写实际的测试代码  
 - mugen的其他功能（如远程执行测试、machine type、machine num等）  
 - 完善辅助测试脚本，实现更多功能  
+    - 目前使用单QEMU虚拟机测试时长过长  
