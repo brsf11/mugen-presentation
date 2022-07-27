@@ -125,68 +125,6 @@
         enabled=1
         gpgcheck=0
         ```  
-- 辅助测试脚本  
-    - mugen中一个测试套对应一个软件或服务，为了更方便地执行测试，可以再抽象一层  
-    - 辅助测试脚本匹配测试列表和mugen中的测试套，并反馈缺失的测试和执行可用测试  
-    - 使用  
-        - 一例完整展示 list_test  
-            - list_test  
-            ```
-            vim
-            coreutils
-            net-tools
-            ```  
-            - 运行结果  
-            ```shell
-            [root@openEuler-riscv64 mugen]# python3 runtest.py list_test
-            Available test suites num = 387
-            total test targets num = 3
-            Unavailable test targets:
-            vim
-            coreutils
-            Available test targets:
-            net-tools
-            Mon Jul 11 22:44:10 2022 - INFO  - start to run testcase:oe_test_service_arp-ethers.
-            Mon Jul 11 22:45:02 2022 - INFO  - The case exit by code 0.
-            Mon Jul 11 22:45:03 2022 - INFO  - End to run testcase:oe_test_service_arp-ethers.
-            Mon Jul 11 22:45:04 2022 - INFO  - A total of 1 use cases were executed, with 1 successes and 0 failures.
-            Target net-tools tested 1 cases, failed 0 cases
-            ```  
-        - 一例展示测试列表比对 list_minimal  
-            - 运行结果（由于测试运行时间太长，展示不运行测试）  
-            ```shell  
-            [root@openEuler-riscv64 mugen]# python3 runtest.py list_minimal 
-            Available test suites num = 387
-            total test targets num = 54
-            Unavailable test targets:
-            vim
-            coreutils
-            systemd-udev
-            libssh
-            passwd
-            wget
-            procps-ng
-            dnf-plugins-core
-            rpm-build
-            ...
-            Available test targets:
-            systemd
-            net-tools
-            openssh
-            NetworkManager
-            dnf
-            git
-            hostname
-            osc
-            iputils
-            cpio
-            util-linux
-            openslp
-            lvm2
-            git
-            kernel
-            ERROR: Targets are not tested!
-            ```
 ## mugen基本测试原理  
 - 测试运行流程   
     - mugen.sh函数调用过程  
@@ -303,15 +241,58 @@
         Tue Jul 12 11:53:04 2022 - INFO  - End to run testcase:oe_test_gcc.
         Tue Jul 12 11:53:04 2022 - INFO  - A total of 1 use cases were executed, with 1 successes and 0 failures. 
         ```
-## 待完成的工作  
-- 开发mugen测试代码  
-    - mugen自带的测试代码中可以直接实用的  
-    - 需要改写的
-    - 缺失，需要编写的  
-    - 最终形成一个测试列表  
-- 对于每一个测试对象  
-    - 首先定义需要测试的功能点  
-    - 之后编写实际的测试代码  
-- mugen的其他功能（如远程执行测试、machine type、machine num等）  
-- 完善辅助测试脚本，实现更多功能  
-    - 目前使用单QEMU虚拟机测试时长过长  
+## RISC-V oE自动化测试脚本开发的工作和计划  
+- 目前工作产出  
+    - 初步整理了一部分可用于目前openEuler RISC-V镜像测试的测试套(7)和测试例(50)  
+    - RISC-V oE自动化测试脚本  
+        - openEuler的mugen项目目前用于openEuler x86/AArch64的测试，并不方便直接用于当前openEuler RISC-V的测试  
+            - 测试项目（测试套）并不能很好地匹配  
+            - 目前的openEuler RISC-V测试依靠QEMU虚拟机
+        - mugen中一个测试套对应一个软件或服务，为了更方便地执行测试，可以再抽象一层  
+        - 辅助测试脚本匹配测试列表和mugen中的测试套，并反馈缺失的测试和执行可用测试  
+        - 使用  
+            - 一例完整展示 list_riscv  
+                - list_riscv  
+                ```
+                os-basic-riscv
+                cpio
+                git
+                net-tools
+                NetworkManager
+                openslp
+                util-linux
+                ```  
+                - 运行结果  
+                ```shell
+                [root@openEuler-riscv64 mugen-riscv]# python3 runtest.py list_riscv 
+                Available test suites num = 390
+                total test targets num = 7
+                Unavailable test targets:
+                Available test targets:
+                os-basic-riscv
+                cpio
+                git
+                net-tools
+                NetworkManager
+                openslp
+                util-linux
+                Target os-basic-riscv tested 39 cases, failed 4 cases                                                                                 
+                Failed test: oe_test_server_httpd_port                                                                                                
+                Failed test: oe_test_server_httpd_restart                                                                                             
+                Failed test: oe_test_IOaccess_1Gfile                                                                                                  
+                Failed test: oe_test_server_httpd_recover                                                                                             
+                Target cpio tested 1 cases, failed 0 cases                                                                                            
+                Target git tested 1 cases, failed 0 cases                                                                                             
+                Target net-tools tested 1 cases, failed 0 cases                                                                                       
+                Target NetworkManager tested 4 cases, failed 1 cases                                                                                  
+                Failed test: oe_test_service_NetworkManager                                                                                           
+                Target openslp tested 1 cases, failed 0 cases                                                                                         
+                Target util-linux tested 3 cases, failed 0 cases                                                                                      
+                100%|█████████████████████████████████████| 7/7 [2:15:00<00:00, 1157.27s/case]
+
+                ```  
+- 未来计划  
+    - 继续整理可用于openEuler RISC-V测试的mugen测试例  
+    - 完善RISC-V oE自动化测试脚本，将mugen测试自动化，和镜像发布流程整合  
+    - 新的测试脚本开发  
+    - 提高测试速度  

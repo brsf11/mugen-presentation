@@ -1,0 +1,8 @@
+- mugen简介和安装使用  
+    - mugen简介  
+    - mugen的安装、配置和使用  
+- mugen开发和后续工作  
+    - mugen基本测试原理  
+    - mugen的开发方法  
+- mugen测试框架的移植工作  
+    - RISC-V oE自动化测试脚本开发的工作和计划  
